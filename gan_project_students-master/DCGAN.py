@@ -92,7 +92,8 @@ for epoch in range(1, config["num_epochs"] + 1):
 
         ## Discriminator fake ##
         # TODO: create a noise vector of the correct dimensions
-        noise_vector = None
+        noise_vector = torch.randn(config["latent_dim"])
+
         # TODO: forward the noise vector through the generator
         generated_image = generator(noise_vector)
 
