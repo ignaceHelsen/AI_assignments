@@ -12,6 +12,7 @@ from fid_score import *
 
 # Load configurations
 config = CustomParser().parse({})
+print(torch.cuda.is_available())
 config["device"] = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device = config["device"]
 learning_rate = config["learning_rate"]
@@ -93,7 +94,6 @@ for epoch in range(1, config["num_epochs"] + 1):
         ## Discriminator fake ##
         # TODO: create a noise vector of the correct dimensions
         noise_vector = torch.randn(config["latent_dim"])
-
         # TODO: forward the noise vector through the generator
         generated_image = generator(noise_vector)
 

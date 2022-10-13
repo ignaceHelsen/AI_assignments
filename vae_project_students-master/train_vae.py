@@ -1,9 +1,13 @@
 import random
 
+import torch.cuda
+
 import models
 import utils
 from options import CustomParser
 from utils import *
+
+print(torch.cuda.is_available())
 
 config = CustomParser().parse({})
 
