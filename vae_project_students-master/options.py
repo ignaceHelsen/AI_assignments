@@ -17,7 +17,7 @@ class CustomParser:
         ### MISC ###
         self.parser.add_argument('--random_seed', type=int, default=1)
         self.parser.add_argument('--batch_size_test', type=int, default=1000)
-        self.parser.add_argument('--device', type=str, default="cpu")
+        self.parser.add_argument('--device', type=str, default="cuda")
         self.parser.add_argument('--name', type=str, help="The name of the model.", default="VAE")
         self.parser.add_argument('--save_path', type=str, default="experiments/")
         self.parser.add_argument('--load_path', type=str, default="experiments/")
