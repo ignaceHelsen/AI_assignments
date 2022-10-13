@@ -1,0 +1,5 @@
+torch
+matplotlib==3.5.3
+sklearn
+torchvision
+wandb
