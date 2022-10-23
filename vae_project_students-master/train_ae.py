@@ -21,7 +21,7 @@ if config["device"] == "cuda" and torch.cuda.is_available():
 else:
     config["device"] = torch.device("cpu")
 
-wandb.init(project="VAE_project", entity="the-elite-schakels", name=config["name"] + "_train")
+wandb.init(project="AE_project", entity="the-elite-schakels", name=config["name"] + "_train")
 
 # Let's first prepare the MNIST dataset,
 # run the test_dataset.py file to view some examples and see the dimensions of your tensor.

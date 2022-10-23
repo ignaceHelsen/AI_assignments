@@ -33,8 +33,8 @@ denormalize = Denormalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
 # TODO: define the generator and discriminator
 # TIP 1: don't forget to apply the weights_init function from utils.py.
 # TIP 2: don't forget to put the models on the correct device.
-generator = Generator(config)
-discriminator = Discriminator(config)
+generator = Generator(config).to(device)
+discriminator = Discriminator().to(device)
 
 # Weights and biases
 if config["wandb"]:
@@ -54,8 +54,8 @@ if config["wandb"]:
 adversarial_loss = nn.BCELoss()
 
 # TODO: define optimizers
-G_optimizer = optim.Adam(generator.parameters())
-D_optimizer = optim.Adam(discriminator.parameters())
+G_optimizer = optim.Adam(generator.parameters(), lr=config["learning_rate"], betas=(0.5,0.999))
+D_optimizer = optim.Adam(discriminator.parameters(), lr=config["learning_rate"], betas=(0.5,0.999))
 
 # define all ones and all zeros tensors
 real_target = Variable(torch.ones(config["batch_size"], 1).to(device))
@@ -86,28 +86,28 @@ for epoch in range(1, config["num_epochs"] + 1):
         output = discriminator(real_images)
 
         # TODO: calculate loss (use the function from utils.py)
-        D_real_loss = utils.discriminator_loss(adversarial_loss, output, real_images)
+        D_real_loss = utils.discriminator_loss(adversarial_loss, output, real_target)
 
         # TODO: backpropagate the loss
         D_real_loss.backward()
 
         ## Discriminator fake ##
         # TODO: create a noise vector of the correct dimensions
-        noise_vector = torch.randn(config["latent_dim"])
+        noise_vector = torch.randn((128, config["latent_dim"], 1, 1)).to(device)
+
         # TODO: forward the noise vector through the generator
         generated_image = generator(noise_vector)
 
         # TODO: forward through the discriminator
-        output = discriminator(generated_image)
+        output = discriminator(generated_image.detach())
 
         # TODO: calculate loss (use the function from utils.py)
-        D_fake_loss = utils.generator_loss(adversarial_loss, output, real_images)
+        D_fake_loss = utils.generator_loss(adversarial_loss, output, fake_target)
 
         # TODO: backpropagate the loss
         D_fake_loss.backward()
 
         # TODO: take a step with the optimizer
-        G_optimizer.step()
         D_optimizer.step()
 
         # Discriminator tot loss
@@ -120,7 +120,7 @@ for epoch in range(1, config["num_epochs"] + 1):
         gen_output = discriminator(generated_image)
 
         # TODO: calculate loss (use the function from utils.py)
-        G_loss = utils.generator_loss(adversarial_loss, output, real_images)
+        G_loss = utils.generator_loss(adversarial_loss, gen_output, real_target)
         G_loss_list.append(G_loss)
 
         # TODO: backpropagate the loss
